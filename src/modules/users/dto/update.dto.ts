@@ -1,23 +1,23 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
-export class createDto {
+export class updateDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly username: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly password: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly telephone: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly role: string;
 }
