@@ -11,10 +11,18 @@ import {
 import { UsersService } from './users.service';
 import { LocalGuard } from '../auth/guard/local.guard';
 import { createDto } from './dto/create.dto';
+import { loginDto } from './dto/login.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
+
+
+  @Post('login')
+  login(@Body() body: loginDto): Promise<string> {
+    return this.service.login(body)
+  }
+
 
   @UseGuards(LocalGuard)
   @Post('register')
