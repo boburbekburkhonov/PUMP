@@ -16,6 +16,7 @@ import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
 import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
 import { RoleModule } from './modules/role/role.module';
+import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
     ConfigModule.forRoot(config),
@@ -43,6 +44,10 @@ import { RoleModule } from './modules/role/role.module';
     RegionModule,
     DistrictModule,
     StationModule,
+    MulterModule.register({
+      dest:'./uploads'
+    })
+  
   ],
 })
 export class AppModule implements NestModule {

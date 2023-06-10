@@ -1,9 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException,StreamableFile  } from '@nestjs/common';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  StreamableFile,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 import { createDto } from './dto/create.dto';
 import { updateDto } from './dto/update.dto';
 import { loginDto } from './dto/login.dto';
-import { createReadStream } from 'fs';
 import * as fs from 'fs';
 import * as path from 'path';
 

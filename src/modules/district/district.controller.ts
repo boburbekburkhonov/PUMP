@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  
+  
 } from '@nestjs/common';
 import { District } from './schema/district.schema';
 import { createDto } from './dto/create.dto';
@@ -24,6 +27,12 @@ export class DistrictController {
   @Post('create')
   createDistrict(@Body() body: createDto): Promise<District> {
     return this.service.createDistrict(body);
+  }
+// !Create many 
+  @Post('many')
+  // @UseInterceptors(FilesInterceptor('image'))
+  createManyDistrict(@Body() body) {
+    return 
   }
 
   @Patch('update/:id')
