@@ -1,3 +1,4 @@
+import { BadRequestException, Injectable, NotFoundException,StreamableFile  } from '@nestjs/common';
 import {
   BadRequestException,
   Injectable,
@@ -25,6 +26,7 @@ export class UsersService {
 
   // ! login -----
   async login(payload: loginDto): Promise<any> {
+
     const file = path.join(process.cwd(), 'users.json');
     const readStream = fs.createReadStream(file);
     readStream.on('data', async (chunk: any) => {
@@ -37,15 +39,14 @@ export class UsersService {
         username: dUsername,
         password: dPassword,
       });
-
+  
       if (!dFindUser) {
         await defaultUsers.map((e) => this.userModel.create(e));
       }
-    });
+      
+    })
+    readStream.on('error', (err) => {throw new BadRequestException(err.message)});
 
-    readStream.on('error', (err) => {
-      throw new BadRequestException(err.message);
-    });
 
     // FOUND USER
     const findUserf = await this.userModel.findOne(payload);
