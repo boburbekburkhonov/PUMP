@@ -11,10 +11,10 @@ export class Region {
   readonly id: String;
 
   @Prop({
-    type: String,
+    type: Number,
     required: true,
   })
-  readonly idNumber: string;
+  readonly idNumber: number;
 
   @Prop({
     type: String,
