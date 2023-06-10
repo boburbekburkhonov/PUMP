@@ -15,7 +15,7 @@ import { RegionModule } from './modules/region/region.module';
 import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
 import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
-
+import { RoleModule } from './modules/role/role.module';
 @Module({
   imports: [
     ConfigModule.forRoot(config),
@@ -34,13 +34,15 @@ import { BalansOrganizationModule } from './modules/balansOrganization/balans.or
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'Station',
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'Role',
+    }),
     UsersModule,
     AuthModule,
     PassportModule,
     RegionModule,
     DistrictModule,
     StationModule,
-    BalansOrganizationModule,
   ],
 })
 export class AppModule implements NestModule {
