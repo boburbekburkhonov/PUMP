@@ -1,0 +1,23 @@
+[
+  {
+    "name": "super admin",
+    "username": "super admin",
+    "password": "123456",
+    "telephone": "123",
+    "role": "superAdmin"
+  },
+  {
+    "name": "admin",
+    "username": "admin",
+    "password": "123",
+    "telephone": "123",
+    "role": "admin"
+  },
+  {
+    "name": "nodir",
+    "username": "nodirbek",
+    "password": "123",
+    "telephone": "123",
+    "role": "user"
+  }
+]
