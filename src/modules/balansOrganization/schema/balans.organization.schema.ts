@@ -2,10 +2,10 @@ import Mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Region } from 'src/modules/region/schema/region.schema';
 
-export type DistrictDocument = HydratedDocument<District>;
+export type BalansOrganizationDocument = HydratedDocument<BalansOrganization>;
 
-@Schema({ collection: 'district' })
-export class District {
+@Schema({ collection: 'balans_organization' })
+export class BalansOrganization {
   @Prop({
     type: Mongoose.Schema.Types.ObjectId,
   })
@@ -30,4 +30,5 @@ export class District {
   readonly region: number;
 }
 
-export const districtSchema = SchemaFactory.createForClass(District);
+export const balansOrganizationSchema =
+  SchemaFactory.createForClass(BalansOrganization);

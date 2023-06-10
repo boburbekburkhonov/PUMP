@@ -14,6 +14,7 @@ import { AuthMiddlewareCreator } from './modules/middleware/role.checker.middlew
 import { RegionModule } from './modules/region/region.module';
 import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
+import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
 
 @Module({
   imports: [
@@ -28,6 +29,9 @@ import { StationModule } from './modules/station/station.module';
       connectionName: 'District',
     }),
     MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'BalansOrganization',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'Station',
     }),
     UsersModule,
@@ -36,6 +40,7 @@ import { StationModule } from './modules/station/station.module';
     RegionModule,
     DistrictModule,
     StationModule,
+    BalansOrganizationModule,
   ],
 })
 export class AppModule implements NestModule {
