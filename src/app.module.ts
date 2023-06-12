@@ -14,8 +14,7 @@ import { AuthMiddlewareCreator } from './modules/middleware/role.checker.middlew
 import { RegionModule } from './modules/region/region.module';
 import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
-import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
-import { RoleModule } from './modules/role/role.module';
+import { MqttModule } from './modules/mqtt/mqtt.module';
 @Module({
   imports: [
     ConfigModule.forRoot(config),
@@ -37,12 +36,19 @@ import { RoleModule } from './modules/role/role.module';
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'Role',
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'DataAll',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'LastData',
+    }),
     UsersModule,
     AuthModule,
     PassportModule,
     RegionModule,
     DistrictModule,
     StationModule,
+    MqttModule,
   ],
 })
 export class AppModule implements NestModule {

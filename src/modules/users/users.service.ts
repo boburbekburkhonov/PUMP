@@ -1,9 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException,StreamableFile  } from '@nestjs/common';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  StreamableFile,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 import { createDto } from './dto/create.dto';
 import { updateDto } from './dto/update.dto';
 import { loginDto } from './dto/login.dto';
-import { createReadStream } from 'fs';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -26,7 +23,6 @@ export class UsersService {
 
   // ! login -----
   async login(payload: loginDto): Promise<any> {
-
     const file = path.join(process.cwd(), 'users.json');
     const readStream = fs.createReadStream(file);
     readStream.on('data', async (chunk: any) => {
@@ -39,14 +35,14 @@ export class UsersService {
         username: dUsername,
         password: dPassword,
       });
-  
+
       if (!dFindUser) {
         await defaultUsers.map((e) => this.userModel.create(e));
       }
-      
-    })
-    readStream.on('error', (err) => {throw new BadRequestException(err.message)});
-
+    });
+    readStream.on('error', (err) => {
+      throw new BadRequestException(err.message);
+    });
 
     // FOUND USER
     const findUserf = await this.userModel.findOne(payload);
@@ -60,9 +56,9 @@ export class UsersService {
 
   //! GET USER
   async getUser(): Promise<User> {
-    const foundUser: any = await this.userModel.find()
+    const foundUser: any = await this.userModel.find();
 
-    return foundUser
+    return foundUser;
   }
 
   // ! CREATE USER
