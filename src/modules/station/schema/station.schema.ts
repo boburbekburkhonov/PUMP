@@ -26,16 +26,16 @@ export class Station {
   readonly topic: string;
 
   @Prop({
-    type: Number,
+    type: String,
     required: true,
   })
-  readonly lat: number;
+  readonly lat: string;
 
   @Prop({
-    type: Number,
+    type: String,
     required: true,
   })
-  readonly lon: number;
+  readonly lon: string;
 
   @Prop({
     type: String,
