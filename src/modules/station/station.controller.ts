@@ -1,8 +1,10 @@
-import { Controller, Post, Patch, Param, Delete, Body } from '@nestjs/common';
+import { Controller, Post, Patch, Param, Delete, Body, UseGuards, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { StationService } from './station.service';
 import { createDto } from './dto/create.dto';
 import { Station } from './schema/station.schema';
 import { updateDto } from './dto/update.dto';
+import { JwtGuard } from '../auth/guard/jwt.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('station')
 export class StationController {
@@ -12,6 +14,14 @@ export class StationController {
   createStation(@Body() body: createDto): Promise<Station> {
     return this.service.createStation(body);
   }
+
+  @UseGuards(JwtGuard)
+  @Post('many')
+  @UseInterceptors(FilesInterceptor('file'))
+  createManyDistrict(@UploadedFiles() file) {
+    return this.service.createManyStation(file)
+  }
+
 
   @Patch('update/:id')
   updateStation(

@@ -4,8 +4,6 @@ import {updateDto} from './dto/update.dto'
 import { Model } from "mongoose";
 import { Role, RoleDocument } from "./schemas/role.schema";
 import { InjectModel } from "@nestjs/mongoose";
-import { error, log } from "console";
-import { ServerResponse } from "http";
 
 
 @Injectable()
@@ -49,6 +47,12 @@ export class RoleService {
   }
 
   // ! DELETE ROLE --
+
+  async deleteRole( id:string){
+   
+    const delRole = await this.roleModel.findByIdAndDelete({ _id: id }).catch((error:unknown)=> {throw new InternalServerErrorException('Internal server error')})
+    
+    return delRole
   async deleteRole(id: string) {
     const delRole = await this.roleModel
       .findByIdAndDelete({ _id: id })
@@ -57,5 +61,6 @@ export class RoleService {
       });
 
     return delRole;
+
   }
 }

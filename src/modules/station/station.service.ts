@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { createDto } from './dto/create.dto';
 import { updateDto } from './dto/update.dto';
+import xlsx from 'node-xlsx'
 
 @Injectable()
 export class StationService {
@@ -24,6 +25,25 @@ export class StationService {
 
     return newStation;
   }
+  
+  
+  //! CREATE STATION
+  async createManyStation(upload){
+    
+    const [file] = upload
+    
+    const [excel] = xlsx.parse(file.buffer);
+    
+    const data = excel.data.filter((e,i)=> i !== 0)
+
+    
+    // "id","name","region","district","company","balans_tash","code","status","protocol","lat","lon","simkart","successres","errorres","made","created_at"
+    data.map(e => this.stationModel.create({name: e[1], topic: e[6], lat:e[9] ? e[9] : ' ' , lon: e[10] ? e[10] : ' ' , simkarta: e[11] ? e[11] : ' ', region:e[2], district:e[3], balansOrganization:e[5]}))         
+        
+
+    return 'created'
+  }
+
 
   //! UPDATE STATION
   async updateStation(id: string, payload: updateDto): Promise<Station> {

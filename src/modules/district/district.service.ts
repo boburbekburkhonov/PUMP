@@ -4,6 +4,11 @@ import { District, DistrictDocument } from './schema/district.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { createDto } from './dto/create.dto';
 import { updateDto } from './dto/update.dto';
+import { writeFile, writeFileSync } from 'fs';
+import * as fs from 'fs';
+import * as path from 'path';
+import { ParseFileOptions } from '@nestjs/common';
+
 
 @Injectable()
 export class DistrictService {
@@ -20,6 +25,21 @@ export class DistrictService {
     return foundDistrict;
   }
 
+  //! CREATE MORE DISTRICT
+  async createManyDistrict(upload:any){  
+    const [file] = upload
+    
+    const write = JSON.parse(file.buffer)
+
+    console.log(write);
+    
+    write.map(e => this.districtModel.create({idNumber: e.id ,name: e.tum_nomi, region: e.vil_id}))
+    
+
+    return 'Created'
+    
+  }
+
   //! CREATE DISTRICT
   async createDistrict(payload: createDto): Promise<District> {
     const foundDistrict = await this.districtModel.findOne(payload);
@@ -32,6 +52,8 @@ export class DistrictService {
 
     return newDistrict;
   }
+
+  
 
   //! UPDATE DISTRICT
   async updateDistrict(id: string, payload: updateDto): Promise<District> {

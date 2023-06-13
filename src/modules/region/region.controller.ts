@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { RegionService } from './region.service';
 import { createDto } from './dto/create.dto';
 import { Region } from './schema/region.schema';
 import { updateDto } from './dto/update.dto';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 
 @Controller('region')
 export class RegionController {

@@ -14,7 +14,13 @@ import { AuthMiddlewareCreator } from './modules/middleware/role.checker.middlew
 import { RegionModule } from './modules/region/region.module';
 import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
+
+import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
+import { RoleModule } from './modules/role/role.module';
+import { MulterModule } from '@nestjs/platform-express';
+
 import { MqttModule } from './modules/mqtt/mqtt.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot(config),
@@ -48,7 +54,14 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     RegionModule,
     DistrictModule,
     StationModule,
+
+    MulterModule.register({
+      dest:'./uploads'
+    })
+  
+
     MqttModule,
+
   ],
 })
 export class AppModule implements NestModule {
