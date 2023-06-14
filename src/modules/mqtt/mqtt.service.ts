@@ -4,18 +4,21 @@ import * as mqtt from 'mqtt';
 import { Station, StationDocument } from '../station/schema/station.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DataAll, DataAllDocument } from './schema/data.all.schema';
+import { Data, DataDocument } from './schema/data.schema';
 import { LastData, LastDataDocument } from './schema/lastdata.schema';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class MqttService implements OnModuleInit {
   constructor(
     @InjectModel(Station.name, 'Station')
     private readonly stationModel: Model<StationDocument>,
-    @InjectModel(DataAll.name, 'DataAll')
-    private readonly dataAllModel: Model<DataAllDocument>,
+    @InjectModel(Data.name, 'Data')
+    private readonly dataAllModel: Model<DataDocument>,
     @InjectModel(LastData.name, 'LastData')
     private readonly lastDataModel: Model<LastDataDocument>,
+    private readonly httpService: HttpService,
   ) {}
 
   private options: IMqttConnectOptions = {
@@ -60,7 +63,7 @@ export class MqttService implements OnModuleInit {
             if (existStationModel) {
               console.log(dataArr);
               const timeYear = new Date().getFullYear();
-              const timeMonth: number = Number(dataArr[1].split('/')[1]) - 1;
+              const timeMonth: number = Number(dataArr[1].split('/')[1]);
               const timeData: number = Number(
                 dataArr[1].split('/')[2]?.slice(0, 2),
               );
@@ -77,7 +80,12 @@ export class MqttService implements OnModuleInit {
                 timeHour,
                 timeMinute,
               );
-              const timeForFetch = `${timeYear}${timeMonth}${timeData}${timeHour}${timeMinute}`;
+
+              const timeForFetch = `${timeYear}${
+                timeMonth < 10 ? '0' + timeMonth : timeMonth
+              }${timeData < 10 ? '0' + timeData : timeData}${
+                timeHour < 10 ? '0' + timeHour : timeHour
+              }${timeMinute < 10 ? '0' + timeMinute : timeMinute}`;
 
               time.setHours(time.getHours() + 5);
 
@@ -107,22 +115,22 @@ export class MqttService implements OnModuleInit {
                 });
 
                 if (existingLastData) {
-                  fetch('89.236.195.198:4010', {
-                    method: 'POST',
-                    headers: {
-                      'content-type': 'application/json',
+                  const url = 'http://89.236.195.198:4010/';
+                  const data = {
+                    code: topic,
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
                     },
-                    body: JSON.stringify({
-                      code: topic,
-                      data: {
-                        avg_level: flowRate,
-                        volume: totuleFlow,
-                        vaqt: timeForFetch,
-                      },
-                    }),
-                  })
-                    .then((res) => res.json())
-                    .then((data) => console.log(data));
+                  };
+                  const request = await this.httpService
+                    .post(url, data)
+                    .pipe(map((res) => res.data));
+
+                  const response = await lastValueFrom(request);
+
+                  console.log(response);
 
                   await this.lastDataModel.findOneAndUpdate(
                     { stationId: existStationModel._id },
@@ -133,10 +141,9 @@ export class MqttService implements OnModuleInit {
                       positiveFlow: positiveFlow,
                       flowRate: flowRate,
                       velocity: velocity,
-                      isWrite: false,
+                      isWrite: response.message == 'OK' ? true : false,
                     },
                   );
-
                   await this.dataAllModel.create({
                     stationId: existStationModel._id,
                     time: time,
@@ -144,25 +151,25 @@ export class MqttService implements OnModuleInit {
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: false,
+                    isWrite: response.message == 'OK' ? true : false,
                   });
                 } else {
-                  fetch('89.236.195.198:4010', {
-                    method: 'POST',
-                    headers: {
-                      'content-type': 'application/json',
+                  const url = 'http://89.236.195.198:4010/';
+                  const data = {
+                    code: topic,
+                    data: {
+                      avg_level: 0,
+                      volume: 135141.6875,
+                      vaqt: 202306121344,
                     },
-                    body: JSON.stringify({
-                      code: topic,
-                      data: {
-                        avg_level: flowRate,
-                        volume: totuleFlow,
-                        vaqt: timeForFetch,
-                      },
-                    }),
-                  })
-                    .then((res) => res.json())
-                    .then((data) => console.log(data));
+                  };
+                  const request = await this.httpService
+                    .post(url, data)
+                    .pipe(map((res) => res.data));
+
+                  const response = await lastValueFrom(request);
+
+                  console.log(response);
 
                   await this.lastDataModel.create({
                     stationId: existStationModel._id,
@@ -171,7 +178,7 @@ export class MqttService implements OnModuleInit {
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: false,
+                    isWrite: response.message == 'OK' ? true : false,
                   });
 
                   await this.dataAllModel.create({
@@ -181,7 +188,7 @@ export class MqttService implements OnModuleInit {
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: false,
+                    isWrite: response.message == 'OK' ? true : false,
                   });
                 }
               }

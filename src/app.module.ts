@@ -14,11 +14,9 @@ import { AuthMiddlewareCreator } from './modules/middleware/role.checker.middlew
 import { RegionModule } from './modules/region/region.module';
 import { DistrictModule } from './modules/district/district.module';
 import { StationModule } from './modules/station/station.module';
-
 import { BalansOrganizationModule } from './modules/balansOrganization/balans.organization.module';
 import { RoleModule } from './modules/role/role.module';
 import { MulterModule } from '@nestjs/platform-express';
-
 import { MqttModule } from './modules/mqtt/mqtt.module';
 
 @Module({
@@ -43,10 +41,16 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
       connectionName: 'Role',
     }),
     MongooseModule.forRoot(process.env.MONGO_URL, {
-      connectionName: 'DataAll',
+      connectionName: 'Data',
     }),
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'LastData',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'YesterdayData',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'DailyData',
     }),
     UsersModule,
     AuthModule,
@@ -54,14 +58,10 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     RegionModule,
     DistrictModule,
     StationModule,
-
     MulterModule.register({
-      dest:'./uploads'
-    })
-  
-
+      dest: './uploads',
+    }),
     MqttModule,
-
   ],
 })
 export class AppModule implements NestModule {

@@ -1,10 +1,10 @@
 import Mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type DataAllDocument = HydratedDocument<DataAll>;
+export type YesterdayDataDocument = HydratedDocument<YesterdayData>;
 
-@Schema({ collection: 'data_all' })
-export class DataAll {
+@Schema({ collection: 'yesterday_data' })
+export class YesterdayData {
   @Prop({
     type: Mongoose.Schema.Types.ObjectId,
   })
@@ -51,4 +51,4 @@ export class DataAll {
   readonly isWrite: boolean;
 }
 
-export const dataAllSchema = SchemaFactory.createForClass(DataAll);
+export const YesterdayDataSchema = SchemaFactory.createForClass(YesterdayData);

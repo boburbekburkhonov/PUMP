@@ -47,12 +47,6 @@ export class RoleService {
   }
 
   // ! DELETE ROLE --
-
-  async deleteRole( id:string){
-   
-    const delRole = await this.roleModel.findByIdAndDelete({ _id: id }).catch((error:unknown)=> {throw new InternalServerErrorException('Internal server error')})
-    
-    return delRole
   async deleteRole(id: string) {
     const delRole = await this.roleModel
       .findByIdAndDelete({ _id: id })
@@ -61,6 +55,5 @@ export class RoleService {
       });
 
     return delRole;
-
   }
 }
