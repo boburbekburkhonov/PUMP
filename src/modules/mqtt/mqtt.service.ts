@@ -63,7 +63,7 @@ export class MqttService implements OnModuleInit {
             if (existStationModel) {
               console.log(dataArr);
               const timeYear = new Date().getFullYear();
-              const timeMonth: number = Number(dataArr[1].split('/')[1]);
+              const timeMonth: number = Number(dataArr[1].split('/')[1]) - 1;
               const timeData: number = Number(
                 dataArr[1].split('/')[2]?.slice(0, 2),
               );

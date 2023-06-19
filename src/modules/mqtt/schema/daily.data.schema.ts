@@ -91,12 +91,6 @@ export class DailyData {
     required: true,
   })
   readonly velocityAvg: number;
-
-  @Prop({
-    type: Boolean,
-    required: true,
-  })
-  readonly isWrite: boolean;
 }
 
 export const dailyDataSchema = SchemaFactory.createForClass(DailyData);

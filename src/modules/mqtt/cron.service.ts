@@ -20,7 +20,7 @@ export class CronService {
     private readonly dailyDataModel: Model<DailyDataDocument>,
   ) {}
 
-  @Cron('* * * * * *')
+  @Cron('38 12 * * *')
   async filterData() {
     //! YESTERDAY DATA DATE
     let startDate = new Date();
@@ -54,19 +54,25 @@ export class CronService {
     // ! DAILY DATA
     const dailyData = await this.dataModel.aggregate([
       {
+        $project: {
+          day: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$time',
+            },
+          },
+          stationId: '$stationId',
+          totuleFlow: '$totuleFlow',
+          positiveFlow: '$positiveFlow',
+          flowRate: '$flowRate',
+          velocity: '$velocity',
+        },
+      },
+      {
         $group: {
           _id: {
-            time: '$time',
+            day: '$day',
             stationId: '$stationId',
-          },
-          time: {
-            $first: '$time',
-          },
-          stationId: {
-            $first: '$stationId',
-          },
-          isWrite: {
-            $first: '$isWrite',
           },
           totuleFlowMax: {
             $max: '$totuleFlow',
@@ -104,14 +110,65 @@ export class CronService {
           velocityAvg: {
             $avg: '$velocity',
           },
+          date: {
+            $first: '$day',
+          },
+          stationId: {
+            $first: '$stationId',
+          },
         },
       },
     ]);
+    console.log(dailyData);
 
-    // dailyData.forEach(async (e) => {
-    //   const foundDailyData = await this.dailyDataModel.findOne({
-    //     stationId: e,
-    //   });
-    // });
+    dailyData.forEach(async (e) => {
+      const foundDailyData = await this.dailyDataModel.findOne({
+        stationId: e.stationId,
+      });
+
+      if (foundDailyData) {
+        await this.dailyDataModel.findOneAndUpdate(
+          { stationId: e.stationId },
+          {
+            stationId: e.stationId,
+            time: e.date,
+            totuleFlowMax: (foundDailyData.totuleFlowMax + e.totuleFlowMax) / 2,
+            totuleFlowMin: (foundDailyData.totuleFlowMin + e.totuleFlowMin) / 2,
+            totuleFlowAvg: (foundDailyData.totuleFlowAvg + e.totuleFlowAvg) / 2,
+            positiveFlowMax:
+              (foundDailyData.positiveFlowMax + e.positiveFlowMax) / 2,
+            positiveFlowMin:
+              (foundDailyData.positiveFlowMin + e.positiveFlowMin) / 2,
+            positiveFlowAvg:
+              (foundDailyData.positiveFlowAvg + e.positiveFlowAvg) / 2,
+            flowRateMax: (foundDailyData.flowRateMax + e.flowRateMax) / 2,
+            flowRateMin: (foundDailyData.flowRateMin + e.flowRateMin) / 2,
+            flowRateAvg: (foundDailyData.flowRateAvg + e.flowRateAvg) / 2,
+            velocityMax: (foundDailyData.velocityMax + e.velocityMax) / 2,
+            velocityMin: (foundDailyData.velocityMin + e.velocityMin) / 2,
+            velocityAvg: (foundDailyData.velocityAvg + e.velocityAvg) / 2,
+          },
+        );
+      } else {
+        const dailyData = new this.dailyDataModel({
+          stationId: e.stationId,
+          time: e.date,
+          totuleFlowMax: e.totuleFlowMax,
+          totuleFlowMin: e.totuleFlowMin,
+          totuleFlowAvg: e.totuleFlowAvg,
+          positiveFlowMax: e.positiveFlowMax,
+          positiveFlowMin: e.positiveFlowMin,
+          positiveFlowAvg: e.positiveFlowAvg,
+          flowRateMax: e.flowRateMax,
+          flowRateMin: e.flowRateMin,
+          flowRateAvg: e.flowRateAvg,
+          velocityMax: e.velocityMax,
+          velocityMin: e.velocityMin,
+          velocityAvg: e.velocityAvg,
+        });
+
+        await dailyData.save();
+      }
+    });
   }
 }
