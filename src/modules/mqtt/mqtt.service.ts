@@ -15,7 +15,7 @@ export class MqttService implements OnModuleInit {
     @InjectModel(Station.name, 'Station')
     private readonly stationModel: Model<StationDocument>,
     @InjectModel(Data.name, 'Data')
-    private readonly dataAllModel: Model<DataDocument>,
+    private readonly dataModel: Model<DataDocument>,
     @InjectModel(LastData.name, 'LastData')
     private readonly lastDataModel: Model<LastDataDocument>,
     private readonly httpService: HttpService,
@@ -141,26 +141,26 @@ export class MqttService implements OnModuleInit {
                       positiveFlow: positiveFlow,
                       flowRate: flowRate,
                       velocity: velocity,
-                      isWrite: response.message == 'OK' ? true : false,
+                      isWrite: response.status == 'success' ? true : false,
                     },
                   );
-                  await this.dataAllModel.create({
+                  await this.dataModel.create({
                     stationId: existStationModel._id,
                     time: time,
                     totuleFlow: totuleFlow,
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: response.message == 'OK' ? true : false,
+                    isWrite: response.status == 'success' ? true : false,
                   });
                 } else {
                   const url = 'http://89.236.195.198:4010/';
                   const data = {
                     code: topic,
                     data: {
-                      avg_level: 0,
-                      volume: 135141.6875,
-                      vaqt: 202306121344,
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
                     },
                   };
                   const request = await this.httpService
@@ -178,17 +178,17 @@ export class MqttService implements OnModuleInit {
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: response.message == 'OK' ? true : false,
+                    isWrite: response.status == 'success' ? true : false,
                   });
 
-                  await this.dataAllModel.create({
+                  await this.dataModel.create({
                     stationId: existStationModel._id,
                     time: time,
                     totuleFlow: totuleFlow,
                     positiveFlow: positiveFlow,
                     flowRate: flowRate,
                     velocity: velocity,
-                    isWrite: response.message == 'OK' ? true : false,
+                    isWrite: response.status == 'success' ? true : false,
                   });
                 }
               }
@@ -199,5 +199,53 @@ export class MqttService implements OnModuleInit {
         }
       },
     );
+  }
+
+  async presentWorkingDevices(): Promise<any> {
+    let date = new Date();
+    let currentPresentDate = new Date();
+    currentPresentDate.setHours(5);
+    currentPresentDate.setMinutes(0);
+    currentPresentDate.setSeconds(0);
+    date.setHours(date.getHours() + 5);
+
+    const foundLastData: any = await this.lastDataModel
+      .find({
+        time: {
+          $gte: currentPresentDate,
+          $lte: date,
+        },
+      })
+      .sort({ time: -1 });
+
+    const allStation = await this.stationModel.find();
+
+    // for (let i = 0; i < foundLastData.length; i++) {
+    //   for (let j = 0; j < allStation.length; j++) {
+    //     if (
+    //       foundLastData[i].stationId.toString() == allStation[i]._id.toString()
+    //     ) {
+    //       console.log(i);
+    //     }
+    //   }
+    // }
+
+    foundLastData.forEach((e: any) => {
+      allStation.forEach((i: any) => {
+        if (e.stationId.toString() == i._id.toString()) {
+          e.station = [i];
+        }
+      });
+    });
+
+    foundLastData.map((e) => console.log(e.station));
+
+    return foundLastData;
+    return {
+      metaData: {
+        total: foundLastData.length,
+      },
+      data: foundLastData,
+    };
   }
 }

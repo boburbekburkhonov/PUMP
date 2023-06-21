@@ -52,6 +52,9 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'DailyData',
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'MonthlyData',
+    }),
     UsersModule,
     AuthModule,
     PassportModule,

@@ -13,6 +13,7 @@ import {
   YesterdayDataSchema,
 } from './schema/yesterday.data.schema';
 import { DailyData, dailyDataSchema } from './schema/daily.data.schema';
+import { MonthlyData, monthlyDataSchema } from './schema/monthly.data.schema';
 
 @Module({
   imports: [
@@ -61,6 +62,15 @@ import { DailyData, dailyDataSchema } from './schema/daily.data.schema';
         },
       ],
       'DailyData',
+    ),
+    MongooseModule.forFeature(
+      [
+        {
+          name: MonthlyData.name,
+          schema: monthlyDataSchema,
+        },
+      ],
+      'MonthlyData',
     ),
     ScheduleModule.forRoot(),
   ],

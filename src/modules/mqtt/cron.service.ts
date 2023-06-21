@@ -8,6 +8,7 @@ import {
 import { Model } from 'mongoose';
 import { Data, DataDocument } from './schema/data.schema';
 import { DailyData, DailyDataDocument } from './schema/daily.data.schema';
+import { MonthlyData, MonthlyDataDocument } from './schema/monthly.data.schema';
 
 @Injectable()
 export class CronService {
@@ -18,6 +19,8 @@ export class CronService {
     private readonly yesterdayDataModel: Model<YesterdayDataDocument>,
     @InjectModel(DailyData.name, 'DailyData')
     private readonly dailyDataModel: Model<DailyDataDocument>,
+    @InjectModel(MonthlyData.name, 'MonthlyData')
+    private readonly monthlyDataModel: Model<MonthlyDataDocument>,
   ) {}
 
   @Cron('38 12 * * *')
