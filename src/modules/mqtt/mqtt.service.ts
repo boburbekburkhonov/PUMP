@@ -201,7 +201,9 @@ export class MqttService implements OnModuleInit {
     );
   }
 
-  async presentWorkingDevices(): Promise<any> {
+  async presentWorkingDevices(request: any): Promise<any> {
+    const { page, limit } = request.query;
+
     let date = new Date();
     let currentPresentDate = new Date();
     currentPresentDate.setHours(5);
@@ -209,6 +211,15 @@ export class MqttService implements OnModuleInit {
     currentPresentDate.setSeconds(0);
     date.setHours(date.getHours() + 5);
 
+    // !TOTAL LAST DATA
+    const totalLastData: any = await this.lastDataModel.find({
+      time: {
+        $gte: currentPresentDate,
+        $lte: date,
+      },
+    });
+
+    // !FOUND LAST DATA
     const foundLastData: any = await this.lastDataModel
       .find({
         time: {
@@ -216,36 +227,44 @@ export class MqttService implements OnModuleInit {
           $lte: date,
         },
       })
-      .sort({ time: -1 });
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    const allStation = await this.stationModel.find();
-
-    // for (let i = 0; i < foundLastData.length; i++) {
-    //   for (let j = 0; j < allStation.length; j++) {
-    //     if (
-    //       foundLastData[i].stationId.toString() == allStation[i]._id.toString()
-    //     ) {
-    //       console.log(i);
-    //     }
-    //   }
-    // }
+    // !ALL STATION
+    const allStation: any = await this.stationModel.find();
 
     foundLastData.forEach((e: any) => {
       allStation.forEach((i: any) => {
         if (e.stationId.toString() == i._id.toString()) {
-          e.station = [i];
+          e.station = i;
         }
       });
     });
 
-    foundLastData.map((e) => console.log(e.station));
+    let response: any = [];
 
-    return foundLastData;
+    foundLastData.map((e: any) => {
+      response.push({
+        _id: e._id,
+        stationId: e.stationId,
+        time: e.time,
+        totuleFlow: e.totuleFlow,
+        positiveFlow: e.positiveFlow,
+        flowRate: e.flowRate,
+        velocity: e.velocity,
+        isWrite: e.isWrite,
+        station: e.station,
+      });
+    });
+
     return {
       metaData: {
-        total: foundLastData.length,
+        total: totalLastData.length,
+        page: page,
+        limit: limit,
+        totaPage: Math.ceil(totalLastData.length / limit),
       },
-      data: foundLastData,
+      data: response,
     };
   }
 }
