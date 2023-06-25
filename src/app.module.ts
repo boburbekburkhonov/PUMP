@@ -61,6 +61,8 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
     RegionModule,
     DistrictModule,
     StationModule,
+    RoleModule,
+    BalansOrganizationModule,
     MulterModule.register({
       dest: './uploads',
     }),
@@ -72,8 +74,8 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthMiddlewareCreator({ value: 'admin' }))
       .forRoutes({ path: '/users/register', method: RequestMethod.POST });
-    consumer
-      .apply(AuthMiddlewareCreator({ value: 'user' }))
-      .forRoutes({ path: '/users/register', method: RequestMethod.POST });
+    // consumer
+    //   .apply(AuthMiddlewareCreator({ value: 'user' }))
+    //   .forRoutes({ path: '/users/register', method: RequestMethod.POST });
   }
 }

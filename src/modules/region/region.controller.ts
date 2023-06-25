@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { RegionService } from './region.service';
 import { createDto } from './dto/create.dto';
 import { Region } from './schema/region.schema';
@@ -8,6 +17,11 @@ import { JwtGuard } from '../auth/guard/jwt.guard';
 @Controller('region')
 export class RegionController {
   constructor(private readonly service: RegionService) {}
+
+  @Get('get')
+  getRegion(): Promise<Region> {
+    return this.service.getRegion();
+  }
 
   @Post('create')
   createRegion(@Body() body: createDto): Promise<Region> {

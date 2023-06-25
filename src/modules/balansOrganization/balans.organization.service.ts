@@ -15,6 +15,14 @@ export class BalansOrganizationService {
     private readonly balansOrganizationModel: Model<BalansOrganizationDocument>,
   ) {}
 
+  //! GET BALANS ORGANIZATION
+  async getBalansOrganization(): Promise<BalansOrganization> {
+    const allBalansOrganization: any =
+      await this.balansOrganizationModel.find();
+
+    return allBalansOrganization;
+  }
+
   //! CREATE BALANS ORGANIZATION
   async createBalansOrganization(
     payload: createDto,

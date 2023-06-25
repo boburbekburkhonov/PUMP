@@ -45,13 +45,16 @@ export class UsersService {
     });
 
     // FOUND USER
-    const findUserf = await this.userModel.findOne(payload);
+    const findUser = await this.userModel.findOne({
+      username: payload.username,
+      password: payload.password,
+    });
 
-    if (!findUserf) {
+    if (!findUser) {
       throw new NotFoundException('user not found');
     }
 
-    return this.sign(String(findUserf._id));
+    return this.sign(String(findUser._id));
   }
 
   //! GET USER

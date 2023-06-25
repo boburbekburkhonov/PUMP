@@ -1,4 +1,12 @@
-import { Controller, Post, Patch, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  Get,
+} from '@nestjs/common';
 import { BalansOrganizationService } from './balans.organization.service';
 import { createDto } from './dto/create.dto';
 import { BalansOrganization } from './schema/balans.organization.schema';
@@ -10,13 +18,20 @@ export class BalansOrganizationController {
     private readonly balansOrganizationService: BalansOrganizationService,
   ) {}
 
+  @Get('get')
+  getBalansOrganization(): Promise<BalansOrganization> {
+    return this.balansOrganizationService.getBalansOrganization();
+  }
+
   @Post('create')
-  createRegion(@Body() body: createDto): Promise<BalansOrganization> {
+  createBalansOrganization(
+    @Body() body: createDto,
+  ): Promise<BalansOrganization> {
     return this.balansOrganizationService.createBalansOrganization(body);
   }
 
   @Patch('update/:id')
-  updateRegion(
+  updateBalansOrganization(
     @Param('id') id: string,
     @Body() body: updateDto,
   ): Promise<BalansOrganization> {
@@ -24,7 +39,9 @@ export class BalansOrganizationController {
   }
 
   @Delete('delete/:id')
-  deleteRegion(@Param('id') id: string): Promise<BalansOrganization> {
+  deleteBalansOrganization(
+    @Param('id') id: string,
+  ): Promise<BalansOrganization> {
     return this.balansOrganizationService.deleteBalansOrganization(id);
   }
 }

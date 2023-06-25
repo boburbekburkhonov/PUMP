@@ -12,6 +12,13 @@ export class RegionService {
     private readonly regionModel: Model<RegionDocument>,
   ) {}
 
+  //! GET REGION
+  async getRegion(): Promise<Region> {
+    const allRegion: any = await this.regionModel.find();
+
+    return allRegion;
+  }
+
   //! CREATE REGION
   async createRegion(payload: createDto): Promise<Region> {
     const foundRegion = await this.regionModel.findOne(payload);

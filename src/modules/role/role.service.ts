@@ -13,30 +13,34 @@ export class RoleService {
     private readonly roleModel: Model<RoleDocument>,
   ) {}
 
+  // // ! CRAETE ROLE--
+  // async getRole(): Promise<Role> {
+  //   const allRole: any = await this.roleModel.find();
+
+  //   return allRole;
+  // }
+
+  // ! READ ROLE --
+  async readRole(): Promise<Role> {
+    const allRole: any = await this.roleModel.find();
+
+    return allRole;
+  }
+
   // ! CRAETE ROLE--
-  async createRole(name: roleDto) {
-    // * to find out if this is similar
+  async createRole(name: roleDto): Promise<Role> {
     const findRole = await this.roleModel.findOne({ name: name.name });
 
     if (findRole) {
       throw new BadRequestException('This role already has created');
     }
-    // * create role
     const newRole = await this.roleModel.create(name);
 
     return newRole;
   }
 
-  // ! READ ROLE --
-  async readRole() {
-    // * to get all role
-    const allRole = await this.roleModel.find();
-
-    return allRole;
-  }
-
   // ! UPDATE ROLE --
-  async updateRole(name: updateDto, id: string) {
+  async updateRole(name: updateDto, id: string): Promise<Role> {
     const update = await this.roleModel
       .findByIdAndUpdate({ _id: id }, name)
       .catch((error: unknown) => {
@@ -47,7 +51,7 @@ export class RoleService {
   }
 
   // ! DELETE ROLE --
-  async deleteRole(id: string) {
+  async deleteRole(id: string): Promise<Role> {
     const delRole = await this.roleModel
       .findByIdAndDelete({ _id: id })
       .catch((error: unknown) => {
