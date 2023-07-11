@@ -13,12 +13,6 @@ export class RoleService {
     private readonly roleModel: Model<RoleDocument>,
   ) {}
 
-  // // ! CRAETE ROLE--
-  // async getRole(): Promise<Role> {
-  //   const allRole: any = await this.roleModel.find();
-
-  //   return allRole;
-  // }
 
   // ! READ ROLE --
   async readRole(): Promise<Role> {

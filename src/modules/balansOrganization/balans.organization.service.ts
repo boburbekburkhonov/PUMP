@@ -42,6 +42,23 @@ export class BalansOrganizationService {
     return newBalansOrganization;
   }
 
+  //! CREATE MORE BALANS ORGANIZATION
+  async createManyBalansOrganization(upload: any) {
+    const [file] = upload;
+
+    const write = JSON.parse(file.buffer);
+
+    write.map((e) =>
+      this.balansOrganizationModel.create({
+        idNumber: e.id,
+        name: e.name,
+        region: e.region_id,
+      }),
+    );
+
+    return 'Created';
+  }
+
   //! UPDATE BALANS ORGANIZATION
   async updateBalansOrganization(
     id: string,

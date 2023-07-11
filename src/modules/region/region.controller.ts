@@ -18,16 +18,19 @@ import { JwtGuard } from '../auth/guard/jwt.guard';
 export class RegionController {
   constructor(private readonly service: RegionService) {}
 
+  @UseGuards(JwtGuard)
   @Get('get')
   getRegion(): Promise<Region> {
     return this.service.getRegion();
   }
 
+  @UseGuards(JwtGuard)
   @Post('create')
   createRegion(@Body() body: createDto): Promise<Region> {
     return this.service.createRegion(body);
   }
 
+  @UseGuards(JwtGuard)
   @Patch('update/:id')
   updateRegion(
     @Param('id') id: string,
@@ -36,6 +39,7 @@ export class RegionController {
     return this.service.updateRegion(id, body);
   }
 
+  @UseGuards(JwtGuard)
   @Delete('delete/:id')
   deleteRegion(@Param('id') id: string): Promise<Region> {
     return this.service.deleteRegion(id);

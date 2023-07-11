@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { User, userSchema } from '../users/schemas/users.schema';
 

@@ -1,8 +1,5 @@
 import Mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Region } from 'src/modules/region/schema/region.schema';
-import { BalansOrganization } from 'src/modules/balansOrganization/schema/balans.organization.schema';
-import { District } from 'src/modules/district/schema/district.schema';
 
 export type StationDocument = HydratedDocument<Station>;
 

@@ -1,6 +1,5 @@
 import Mongoose, { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Region } from 'src/modules/region/schema/region.schema';
 
 export type DistrictDocument = HydratedDocument<District>;
 

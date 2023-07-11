@@ -6,11 +6,16 @@ import {
   Param,
   Body,
   Get,
+  UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { BalansOrganizationService } from './balans.organization.service';
 import { createDto } from './dto/create.dto';
 import { BalansOrganization } from './schema/balans.organization.schema';
 import { updateDto } from './dto/update.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 
 @Controller('balans/org')
 export class BalansOrganizationController {
@@ -28,6 +33,14 @@ export class BalansOrganizationController {
     @Body() body: createDto,
   ): Promise<BalansOrganization> {
     return this.balansOrganizationService.createBalansOrganization(body);
+  }
+
+  // !Create many
+  @UseGuards(JwtGuard)
+  @Post('create/many')
+  @UseInterceptors(FilesInterceptor('file'))
+  createManyBalansOrganization(@UploadedFiles() file) {
+    return this.balansOrganizationService.createManyBalansOrganization(file);
   }
 
   @Patch('update/:id')

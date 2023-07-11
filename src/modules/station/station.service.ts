@@ -43,7 +43,6 @@ export class StationService {
     const data = excel.data.filter((e,i)=> i !== 0)
 
 
-    // "id","name","region","district","company","balans_tash","code","status","protocol","lat","lon","simkart","successres","errorres","made","created_at"
     data.map(e => this.stationModel.create({name: e[1], topic: e[6], lat:e[9] ? e[9] : ' ' , lon: e[10] ? e[10] : ' ' , simkarta: e[11] ? e[11] : ' ', region:e[2], district:e[3], balansOrganization:e[5]}))
 
 

@@ -30,7 +30,7 @@ export class UsersController {
     return this.service.login(body);
   }
 
-  // @UseGuards(LocalGuard)
+  @UseGuards(LocalGuard)
   @Post('register')
   register(@Body() body: createDto): Promise<string> {
     return this.service.createUser(body);

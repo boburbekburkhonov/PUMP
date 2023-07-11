@@ -26,6 +26,7 @@ export class StationController {
     return this.service.getStation();
   }
 
+  @UseGuards(JwtGuard)
   @Post('create')
   createStation(@Body() body: createDto): Promise<Station> {
     return this.service.createStation(body);
