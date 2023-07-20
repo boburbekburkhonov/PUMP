@@ -15,6 +15,14 @@ export class BalansOrganizationService {
     private readonly balansOrganizationModel: Model<BalansOrganizationDocument>,
   ) {}
 
+  //! GET BALANS ORGANIZATION ID
+  async getBalansOrganizationById(id: string): Promise<BalansOrganization> {
+    const foundOneOrganization: any =
+      await this.balansOrganizationModel.findOne( {_id: id})
+
+    return foundOneOrganization;
+  }
+
   //! GET BALANS ORGANIZATION
   async getBalansOrganization(): Promise<BalansOrganization> {
     const allBalansOrganization: any =

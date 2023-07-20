@@ -13,6 +13,13 @@ export class RegionService {
   ) {}
 
   //! GET REGION
+  async getRegionById(id: string): Promise<Region> {
+    const oneRegion: any = await this.regionModel.findOne({_id: id});
+
+    return oneRegion;
+  }
+
+  //! GET REGION
   async getRegion(): Promise<Region> {
     const allRegion: any = await this.regionModel.find();
 

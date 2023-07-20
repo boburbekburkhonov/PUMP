@@ -13,6 +13,14 @@ export class StationService {
     private readonly stationModel: Model<StationDocument>,
   ) {}
 
+  //! GET STATION
+  async getStationById(id: string): Promise<Station>{
+    const oneStation: any = await this.stationModel.findOne({_id: id})
+
+    return oneStation
+  }
+
+  //! GET ALL STATION
   async getStation(): Promise<Station>{
     const allStation: any = await this.stationModel.find()
 

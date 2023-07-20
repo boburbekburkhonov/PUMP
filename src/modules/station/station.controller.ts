@@ -21,6 +21,11 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 export class StationController {
   constructor(private readonly service: StationService) {}
 
+  @Get('get/:id')
+  getStationById(@Param('id') id: string): Promise<any> {
+    return this.service.getStationById(id);
+  }
+
   @Get('get')
   getStation(): Promise<any> {
     return this.service.getStation();

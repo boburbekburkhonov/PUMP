@@ -22,6 +22,12 @@ export class DistrictController {
   constructor(private readonly service: DistrictService) {}
 
   @UseGuards(JwtGuard)
+  @Get('get/:id')
+  getDistrictById(@Param('id') id: string): Promise<District> {
+    return this.service.getDistrictById(id);
+  }
+
+  @UseGuards(JwtGuard)
   @Get('get')
   getDistrict(): Promise<District> {
     return this.service.getDistrict();

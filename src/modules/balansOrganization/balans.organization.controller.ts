@@ -23,6 +23,13 @@ export class BalansOrganizationController {
     private readonly balansOrganizationService: BalansOrganizationService,
   ) {}
 
+  @Get('get/:id')
+  getBalansOrganizationById(
+    @Param('id') id: string,
+  ): Promise<BalansOrganization> {
+    return this.balansOrganizationService.getBalansOrganizationById(id);
+  }
+
   @Get('get')
   getBalansOrganization(): Promise<BalansOrganization> {
     return this.balansOrganizationService.getBalansOrganization();

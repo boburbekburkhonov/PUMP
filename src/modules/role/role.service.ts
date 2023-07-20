@@ -15,6 +15,13 @@ export class RoleService {
 
 
   // ! READ ROLE --
+  async readRoleById(id: string): Promise<Role> {
+    const oneRole: any = await this.roleModel.findOne({_id: id});
+
+    return oneRole;
+  }
+
+  // ! READ ROLE --
   async readRole(): Promise<Role> {
     const allRole: any = await this.roleModel.find();
 

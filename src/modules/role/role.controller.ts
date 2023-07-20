@@ -9,6 +9,13 @@ import { Role } from './schemas/role.schema';
 export class RoleController {
   constructor(private readonly service: RoleService) {}
 
+  // ! read role -------
+  @UseGuards(JwtGuard)
+  @Get('read/:id')
+  readRoleById(@Param('id') id: string): Promise<Role> {
+    return this.service.readRoleById(id);
+  }
+
   // ! read roles -------
   @UseGuards(JwtGuard)
   @Get('read')

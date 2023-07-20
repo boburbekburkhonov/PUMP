@@ -20,6 +20,11 @@ import { loginDto } from './dto/login.dto';
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
+  @Get('get/:id')
+  getUserById(@Param('id') id: string): Promise<User> {
+    return this.service.getUserById(id);
+  }
+
   @Get('get')
   getUser(): Promise<User> {
     return this.service.getUser();

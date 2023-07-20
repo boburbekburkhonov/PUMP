@@ -57,6 +57,13 @@ export class UsersService {
     return this.sign(String(findUser._id));
   }
 
+  //! GET USER BY ID
+  async getUserById(id: string): Promise<User> {
+    const foundOneUser: any = await this.userModel.findOne({_id: id});
+
+    return foundOneUser;
+  }
+
   //! GET USER
   async getUser(): Promise<User> {
     const foundUser: any = await this.userModel.find();

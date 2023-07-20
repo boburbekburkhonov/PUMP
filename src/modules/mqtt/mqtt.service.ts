@@ -126,9 +126,9 @@ export class MqttService implements OnModuleInit {
                   };
                   const request = await this.httpService
                     .post(url, data)
-                    .pipe(map((res) => res.data));
+                    .pipe(map((res: any) => res.data));
 
-                  const response = await lastValueFrom(request);
+                  const response: any = await lastValueFrom(request);
 
                   console.log(response);
 
@@ -165,9 +165,9 @@ export class MqttService implements OnModuleInit {
                   };
                   const request = await this.httpService
                     .post(url, data)
-                    .pipe(map((res) => res.data));
+                    .pipe(map((res: any) => res.data));
 
-                  const response = await lastValueFrom(request);
+                  const response: any = await lastValueFrom(request);
 
                   console.log(response);
 

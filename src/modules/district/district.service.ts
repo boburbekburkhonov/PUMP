@@ -13,6 +13,12 @@ export class DistrictService {
   ) {}
 
   //! GET DISTRICT
+  async getDistrictById(id: string): Promise<District> {
+    const foundOneDistrict: any = await this.districtModel.findOne({_id: id});
+    return foundOneDistrict;
+  }
+
+  //! GET DISTRICT
   async getDistrict(): Promise<District> {
     const foundDistrict: any = await this.districtModel.find();
     return foundDistrict;

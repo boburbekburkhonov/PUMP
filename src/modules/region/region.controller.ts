@@ -19,6 +19,12 @@ export class RegionController {
   constructor(private readonly service: RegionService) {}
 
   @UseGuards(JwtGuard)
+  @Get('get/:id')
+  getRegionById(@Param('id') id: string): Promise<Region> {
+    return this.service.getRegionById(id);
+  }
+
+  @UseGuards(JwtGuard)
   @Get('get')
   getRegion(): Promise<Region> {
     return this.service.getRegion();
