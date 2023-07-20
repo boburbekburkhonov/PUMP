@@ -3,7 +3,7 @@ import { IMqttConnectOptions } from 'src/types';
 import * as mqtt from 'mqtt';
 import { Station, StationDocument } from '../station/schema/station.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Data, DataDocument } from './schema/data.schema';
 import { LastData, LastDataDocument } from './schema/lastdata.schema';
 import { HttpService } from '@nestjs/axios';
@@ -59,6 +59,7 @@ export class MqttService implements OnModuleInit {
             const existStationModel = await this.stationModel.findOne({
               topic: topic,
             });
+            console.log(topic);
 
             if (existStationModel) {
               console.log(dataArr);
@@ -114,7 +115,145 @@ export class MqttService implements OnModuleInit {
                   stationId: existStationModel._id,
                 });
 
-                if (existingLastData) {
+                if (!existingLastData && topic == 'NS00127/') {
+                  const url = 'http://89.236.195.198:4010/';
+                  //! 127
+                  const dataFirst = {
+                    code: topic,
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestFirst = await this.httpService
+                    .post(url, dataFirst)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseFirst: any = await lastValueFrom(requestFirst);
+
+                  await this.lastDataModel.create({
+                    stationId: existStationModel._id,
+                    time: time,
+                    totuleFlow: totuleFlow,
+                    positiveFlow: positiveFlow,
+                    flowRate: flowRate,
+                    velocity: velocity,
+                    isWrite: responseFirst.status == 'success' ? true : false,
+                  });
+
+                  await this.dataModel.create({
+                    stationId: existStationModel._id,
+                    time: time,
+                    totuleFlow: totuleFlow,
+                    positiveFlow: positiveFlow,
+                    flowRate: flowRate,
+                    velocity: velocity,
+                    isWrite: responseFirst.status == 'success' ? true : false,
+                  });
+
+                  //! 302
+                  const dataSecond = {
+                    code: 'NS00302/',
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestSecond = await this.httpService
+                    .post(url, dataSecond)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseSecond: any = await lastValueFrom(
+                    requestSecond,
+                  );
+
+                  //! 289
+                  const dataThird = {
+                    code: 'NS00289/',
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestThird = await this.httpService
+                    .post(url, dataThird)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseThird: any = await lastValueFrom(requestThird);
+                } else if (existingLastData && topic == 'NS00127/') {
+                  const url = 'http://89.236.195.198:4010/';
+                  //! 127
+                  const dataFirst = {
+                    code: topic,
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestFirst = await this.httpService
+                    .post(url, dataFirst)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseFirst: any = await lastValueFrom(requestFirst);
+
+                  await this.lastDataModel.findOneAndUpdate(
+                    { stationId: existStationModel._id },
+                    {
+                      stationId: existStationModel._id,
+                      time: time,
+                      totuleFlow: totuleFlow,
+                      positiveFlow: positiveFlow,
+                      flowRate: flowRate,
+                      velocity: velocity,
+                      isWrite: responseFirst.status == 'success' ? true : false,
+                    },
+                  );
+                  await this.dataModel.create({
+                    stationId: existStationModel._id,
+                    time: time,
+                    totuleFlow: totuleFlow,
+                    positiveFlow: positiveFlow,
+                    flowRate: flowRate,
+                    velocity: velocity,
+                    isWrite: responseFirst.status == 'success' ? true : false,
+                  });
+
+                  // ! 302
+                  const dataSecond = {
+                    code: 'NS00302/',
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestSecond = await this.httpService
+                    .post(url, dataSecond)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseSecond: any = await lastValueFrom(
+                    requestSecond,
+                  );
+
+                  // ! 289
+                  const dataThird = {
+                    code: 'NS00289/',
+                    data: {
+                      avg_level: flowRate,
+                      volume: totuleFlow,
+                      vaqt: timeForFetch,
+                    },
+                  };
+                  const requestThird = await this.httpService
+                    .post(url, dataThird)
+                    .pipe(map((res: any) => res.data));
+
+                  const responseThird: any = await lastValueFrom(requestThird);
+                } else if (existingLastData) {
                   const url = 'http://89.236.195.198:4010/';
                   const data = {
                     code: topic,
@@ -153,7 +292,7 @@ export class MqttService implements OnModuleInit {
                     velocity: velocity,
                     isWrite: response.status == 'success' ? true : false,
                   });
-                } else {
+                } else if (!existingLastData) {
                   const url = 'http://89.236.195.198:4010/';
                   const data = {
                     code: topic,

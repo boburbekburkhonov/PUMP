@@ -13,10 +13,9 @@ export class RoleService {
     private readonly roleModel: Model<RoleDocument>,
   ) {}
 
-
-  // ! READ ROLE --
+  // ! READ ROLE BY ID
   async readRoleById(id: string): Promise<Role> {
-    const oneRole: any = await this.roleModel.findOne({_id: id});
+    const oneRole: any = await this.roleModel.findOne({ _id: id });
 
     return oneRole;
   }

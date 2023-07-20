@@ -13,18 +13,18 @@ export class StationService {
     private readonly stationModel: Model<StationDocument>,
   ) {}
 
-  //! GET STATION
-  async getStationById(id: string): Promise<Station>{
-    const oneStation: any = await this.stationModel.findOne({_id: id})
+  //! GET STATION BY ID
+  async getStationById(id: string): Promise<Station> {
+    const oneStation: any = await this.stationModel.findOne({ _id: id });
 
-    return oneStation
+    return oneStation;
   }
 
   //! GET ALL STATION
-  async getStation(): Promise<Station>{
-    const allStation: any = await this.stationModel.find()
+  async getStation(): Promise<Station> {
+    const allStation: any = await this.stationModel.find();
 
-    return allStation
+    return allStation;
   }
 
   //! CREATE STATION
@@ -40,23 +40,29 @@ export class StationService {
     return newStation;
   }
 
-
   //! CREATE STATION
-  async createManyStation(upload){
-
-    const [file] = upload
+  async createManyStation(upload) {
+    const [file] = upload;
 
     const [excel] = xlsx.parse(file.buffer);
 
-    const data = excel.data.filter((e,i)=> i !== 0)
+    const data = excel.data.filter((e, i) => i !== 0);
 
+    data.map((e) =>
+      this.stationModel.create({
+        name: e[1],
+        topic: e[6],
+        lat: e[9] ? e[9] : ' ',
+        lon: e[10] ? e[10] : ' ',
+        simkarta: e[11] ? e[11] : ' ',
+        region: e[2],
+        district: e[3],
+        balansOrganization: e[5],
+      }),
+    );
 
-    data.map(e => this.stationModel.create({name: e[1], topic: e[6], lat:e[9] ? e[9] : ' ' , lon: e[10] ? e[10] : ' ' , simkarta: e[11] ? e[11] : ' ', region:e[2], district:e[3], balansOrganization:e[5]}))
-
-
-    return 'created'
+    return 'created';
   }
-
 
   //! UPDATE STATION
   async updateStation(id: string, payload: updateDto): Promise<Station> {
@@ -84,7 +90,9 @@ export class StationService {
       throw new HttpException('Bu station mavjud emas', HttpStatus.OK);
     }
 
-    const deleteStation = await this.stationModel.findByIdAndDelete({ _id: id });
+    const deleteStation = await this.stationModel.findByIdAndDelete({
+      _id: id,
+    });
 
     if (deleteStation) {
       return deleteStation;

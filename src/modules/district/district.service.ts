@@ -12,9 +12,9 @@ export class DistrictService {
     private readonly districtModel: Model<DistrictDocument>,
   ) {}
 
-  //! GET DISTRICT
+  //! GET DISTRICT BY ID
   async getDistrictById(id: string): Promise<District> {
-    const foundOneDistrict: any = await this.districtModel.findOne({_id: id});
+    const foundOneDistrict: any = await this.districtModel.findOne({ _id: id });
     return foundOneDistrict;
   }
 

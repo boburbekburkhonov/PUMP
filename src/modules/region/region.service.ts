@@ -12,9 +12,9 @@ export class RegionService {
     private readonly regionModel: Model<RegionDocument>,
   ) {}
 
-  //! GET REGION
+  //! GET REGION BY ID
   async getRegionById(id: string): Promise<Region> {
-    const oneRegion: any = await this.regionModel.findOne({_id: id});
+    const oneRegion: any = await this.regionModel.findOne({ _id: id });
 
     return oneRegion;
   }
