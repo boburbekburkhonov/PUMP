@@ -14,6 +14,7 @@ import {
 } from './schema/yesterday.data.schema';
 import { DailyData, dailyDataSchema } from './schema/daily.data.schema';
 import { MonthlyData, monthlyDataSchema } from './schema/monthly.data.schema';
+import { Region, regionSchema } from '../region/schema/region.schema';
 
 @Module({
   imports: [
@@ -71,6 +72,15 @@ import { MonthlyData, monthlyDataSchema } from './schema/monthly.data.schema';
         },
       ],
       'MonthlyData',
+    ),
+    MongooseModule.forFeature(
+      [
+        {
+          name: Region.name,
+          schema: regionSchema,
+        },
+      ],
+      'Region',
     ),
     ScheduleModule.forRoot(),
   ],

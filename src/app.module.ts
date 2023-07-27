@@ -18,12 +18,16 @@ import { BalansOrganizationModule } from './modules/balansOrganization/balans.or
 import { RoleModule } from './modules/role/role.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { MqttModule } from './modules/mqtt/mqtt.module';
+import { UserStationsModule } from './modules/userStations/user.stations.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(config),
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'User',
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL, {
+      connectionName: 'UserStations',
     }),
     MongooseModule.forRoot(process.env.MONGO_URL, {
       connectionName: 'Region',
@@ -56,6 +60,7 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
       connectionName: 'MonthlyData',
     }),
     UsersModule,
+    UserStationsModule,
     AuthModule,
     PassportModule,
     RegionModule,
